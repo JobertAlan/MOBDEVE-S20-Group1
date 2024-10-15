@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/miTimer"
+        android:icon="@drawable/ic_timer"
+        android:title="Timer"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miJournal"
+        android:icon="@drawable/ic_journal"
+        android:title="Journal"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miTask"
+        android:icon="@drawable/ic_task"
+        android:title="Tasks"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miOther"
+        android:icon="@drawable/ic_other"
+        android:title="Other"
+        app:showAsAction="always" />
+</menu>

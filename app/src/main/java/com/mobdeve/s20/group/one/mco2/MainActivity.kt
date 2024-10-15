@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.mobdeve.s20.group.one.mco2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -20,9 +21,39 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root) // Set contentView from the generated binding class.
 
-        var testString = binding.helloWorldTv.text.toString()
+        // Tests to access the elements present in the activity_main.xml
+//        var testString = binding.helloWorldTv.text.toString()
+//        Log.d("testString", testString)
 
-        Log.d("testString", testString)
+        // Definition of fragments
+        val timerFragment = TimerFragment()
+        val journalFragment = JournalFragment()
+        val taskFragment = TaskFragment()
+        val otherFragment = OtherFragment()
 
+        // Sets the first fragment the user will see
+        setCurrentFragment(timerFragment)
+
+        // Bottom navigation bar controls
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.miTimer -> setCurrentFragment(timerFragment)
+                R.id.miJournal -> setCurrentFragment(journalFragment)
+                R.id.miTask -> setCurrentFragment(taskFragment)
+                R.id.miOther -> setCurrentFragment(otherFragment)
+            }
+            true
+        }
+
+    }
+
+
+    // Function to switch between fragments
+    private fun setCurrentFragment(fragment: Fragment) {
+        Log.d("MainActivity", "Switching to fragment: ${fragment.javaClass.simpleName}")
+        supportFragmentManager.beginTransaction().apply {
+            replace(binding.flFragment.id, fragment)
+            commit()
+        }
     }
 }

@@ -2,10 +2,7 @@ package com.mobdeve.s20.group.one.mco2
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.mobdeve.s20.group.one.mco2.databinding.ActivityMainBinding
 
@@ -26,10 +23,11 @@ class MainActivity : AppCompatActivity() {
 //        Log.d("testString", testString)
 
         // Definition of fragments
-        val timerFragment = TimerFragment()
-        val journalFragment = JournalFragment()
-        val taskFragment = TaskFragment()
-        val otherFragment = OtherFragment()
+        val timerFragment = TimerFragment()     // Responsible for the timer logic
+        val journalFragment = JournalFragment() // Responsible for the journal logic
+        val taskFragment = TaskFragment()       // Responsible for the task logic
+        val otherFragment = OtherFragment()     // Idk what to put here, probably where you can view the statistics or something
+                                                // Refer to MCO1 project proposal
 
         // Sets the first fragment the user will see
         setCurrentFragment(timerFragment)

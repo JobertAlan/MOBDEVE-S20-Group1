@@ -21,7 +21,7 @@
 
             <TextView
                 android:id="@+id/tvTaskTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="225dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Sample Task Title"
@@ -32,17 +32,17 @@
                 app:layout_constraintHorizontal_bias="0.077"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.45" />
+                app:layout_constraintVertical_bias="0.32" />
 
             <TextView
                 android:id="@+id/tvTaskProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="88dp"
-                android:layout_marginTop="44dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="44dp"
                 android:text="In Progress"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                app:layout_constraintStart_toEndOf="@+id/tvTaskTitle"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -60,10 +60,13 @@
                 android:id="@+id/vLine1"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
                 android:background="#787676"
-                app:layout_constraintTop_toBottomOf="@+id/tvIdTask"
-                tools:layout_editor_absoluteX="0dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvIdTask" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

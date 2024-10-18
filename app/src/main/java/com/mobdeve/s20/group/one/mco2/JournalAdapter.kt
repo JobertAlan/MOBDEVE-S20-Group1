@@ -32,7 +32,6 @@ class JournalAdapter(private val journalList: ArrayList<Journal>):
         }
     }
 
-
     override fun getItemCount(): Int {
         return journalList.size
     }

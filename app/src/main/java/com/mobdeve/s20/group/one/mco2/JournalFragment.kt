@@ -32,15 +32,17 @@ class JournalFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentJournalBinding.inflate(inflater, container, false)
 
-        recyclerView = binding.rvJournal
-        recyclerView.adapter = JournalAdapter(journalList)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerView = binding.rvJournal
+        recyclerView.adapter = JournalAdapter(journalList)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+
 
         binding.btnAddJournal.setOnClickListener {
             Log.d("MainActivity", "Journal button clicked")

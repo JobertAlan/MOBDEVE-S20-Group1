@@ -7,12 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s20.group.one.mco2.databinding.FragmentTaskBinding
 
 
 class TaskFragment : Fragment(R.layout.fragment_task) {
 
     private lateinit var binding: FragmentTaskBinding
+
+    private val taskList: ArrayList<Task> = DataTaskGenerator.generateTaskData()
+
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?
@@ -26,6 +32,12 @@ class TaskFragment : Fragment(R.layout.fragment_task) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerView = binding.rvTask
+        recyclerView.adapter = TaskAdapter(taskList)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+
 
         binding.btnAddTask.setOnClickListener {
             Log.d("MainActivity", "Task button clicked")

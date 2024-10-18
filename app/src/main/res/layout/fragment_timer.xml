@@ -33,13 +33,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ProgressBar
+            android:id="@+id/wtTimerBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnPopupTimer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/tvCountDown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="88dp"
             android:text="00:00"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="34sp"
             android:textStyle="bold"
             android:typeface="monospace"
             app:layout_constraintBottom_toTopOf="@+id/btnPopupTimer"

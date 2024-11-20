@@ -21,9 +21,10 @@ class JournalFragment : Fragment() {
 
     private lateinit var binding: FragmentJournalBinding
 
-    private val journalList: ArrayList<Journal> = DataJournalGenerator.generateJournalData()
+    private val journalList: List<Journal> = DataJournalGenerator.generateJournalData()
 
-    private lateinit var recyclerView: RecyclerView
+    //private lateinit var recyclerView: RecyclerView
+    private lateinit var journalAdapter: JournalAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?
@@ -38,9 +39,12 @@ class JournalFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = binding.rvJournal
-        recyclerView.adapter = JournalAdapter(journalList)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+//        recyclerView = binding.rvJournal
+//        recyclerView.adapter = JournalAdapter(journalList)
+//        recyclerView.layoutManager = LinearLayoutManager(context)
+        journalAdapter = JournalAdapter(journalList, requireContext())
+        binding.rvJournal.adapter = journalAdapter
+        binding.rvJournal.layoutManager = LinearLayoutManager(context)
 
 
 
@@ -50,6 +54,11 @@ class JournalFragment : Fragment() {
             Toast.makeText(context, "Add Journal clicked", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        journalAdapter.refreshData(DataJournalGenerator.generateJournalData())
     }
 
 

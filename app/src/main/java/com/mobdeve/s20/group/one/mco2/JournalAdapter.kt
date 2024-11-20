@@ -1,6 +1,7 @@
 package com.mobdeve.s20.group.one.mco2
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,10 @@ class JournalAdapter(private var journalList: List<Journal>, context: Context):
         // This is what will be setting the intent to view the different journals ideally
         holder.itemView.setOnClickListener {
             Toast.makeText(holder.itemView.context, "Journal ${journal.title} clicked", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(holder.itemView.context, UpdateJournalActivity::class.java)
+            intent.putExtra("journalId", journal.journalId)
+            holder.itemView.context.startActivity(intent)
         }
     }
 

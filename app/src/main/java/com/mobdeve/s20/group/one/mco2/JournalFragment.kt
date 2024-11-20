@@ -1,5 +1,6 @@
 package com.mobdeve.s20.group.one.mco2
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,8 +22,8 @@ class JournalFragment : Fragment() {
 
     private lateinit var binding: FragmentJournalBinding
 
-    private val journalList: List<Journal> = DataJournalGenerator.generateJournalData()
-
+    //private val journalList: List<Journal> = DataJournalGenerator.generateJournalData()
+    private lateinit var db: DbHelper
     //private lateinit var recyclerView: RecyclerView
     private lateinit var journalAdapter: JournalAdapter
 
@@ -33,6 +34,8 @@ class JournalFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentJournalBinding.inflate(inflater, container, false)
 
+        db = DbHelper(requireContext())
+
         return binding.root
     }
 
@@ -42,7 +45,7 @@ class JournalFragment : Fragment() {
 //        recyclerView = binding.rvJournal
 //        recyclerView.adapter = JournalAdapter(journalList)
 //        recyclerView.layoutManager = LinearLayoutManager(context)
-        journalAdapter = JournalAdapter(journalList, requireContext())
+        journalAdapter = JournalAdapter(db.getAllJournals(), requireContext())
         binding.rvJournal.adapter = journalAdapter
         binding.rvJournal.layoutManager = LinearLayoutManager(context)
 
@@ -50,15 +53,17 @@ class JournalFragment : Fragment() {
 
         binding.btnAddJournal.setOnClickListener {
             Log.d("MainActivity", "Journal button clicked")
-
             Toast.makeText(context, "Add Journal clicked", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(requireContext(), AddJournalActivity::class.java)
+            startActivity(intent)
         }
 
     }
 
     override fun onResume() {
         super.onResume()
-        journalAdapter.refreshData(DataJournalGenerator.generateJournalData())
+        journalAdapter.refreshData(db.getAllJournals())
     }
 
 

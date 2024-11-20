@@ -153,4 +153,30 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
         return journalList
     }
 
+    fun getJournalById(journalId: Int): Journal {
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLE_JOURNAL WHERE $COLUMN_JOURNAL_ID = $journalId"
+
+        val cursor = db.rawQuery(query, null)
+        cursor.moveToFirst()
+
+        val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_JOURNAL_ID))
+        val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_JOURNAL_TITLE))
+        val date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_JOURNAL_DATE))
+        val content = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_JOURNAL_CONTENT))
+        val score = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_JOURNAL_SCORE))
+
+        cursor.close()
+        db.close()
+        return Journal(id, title, date, content, score)
+    }
+
+    fun deleteJournal(journalId: Int) {
+        val db = writableDatabase
+        val whereClause = "$COLUMN_JOURNAL_ID = ?"
+        val whereArgs = arrayOf(journalId.toString())
+        db.delete(TABLE_JOURNAL, whereClause, whereArgs)
+        db.close()
+    }
+
 }

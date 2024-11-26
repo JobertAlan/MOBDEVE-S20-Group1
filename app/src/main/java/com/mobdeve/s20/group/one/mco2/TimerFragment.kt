@@ -1,17 +1,34 @@
 package com.mobdeve.s20.group.one.mco2
 
+import android.app.Dialog
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 import com.mobdeve.s20.group.one.mco2.databinding.FragmentTimerBinding
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 
 class TimerFragment : Fragment() {
+
+    private var timeSelected : Int = 0
+    private var timeCountDown: CountDownTimer? = null
+    private var timeProgress = 0
+    private var pauseOffSet: Long = 0
+    private var isStart = true
+
+    private lateinit var executor : ScheduledExecutorService
 
     private lateinit var binding: FragmentTimerBinding
 
@@ -22,7 +39,10 @@ class TimerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentTimerBinding.inflate(inflater, container, false)
 
-
+        val addTimerButton = binding.btnAddTimer
+        val startTimerButton = binding.btnStartTimer
+        val resetTimerButton = binding.btnResetTimer
+        val addFifteenButton = binding.btnAddFifteen
 
         //return timerView
         return binding.root
@@ -32,15 +52,149 @@ class TimerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Implement logic for setting timer
-        binding.btnPopupTimer.setOnClickListener {
+        binding.btnAddTimer.setOnClickListener {
+            setTimeFunction()
+        }
+        binding.btnStartTimer.setOnClickListener {
+            startTimerSetup()
+        }
+        binding.btnResetTimer.setOnClickListener {
+            resetTimer()
+        }
+        binding.btnAddFifteen.setOnClickListener {
+            addExtraTime()
+        }
 
-            Log.d("MainActivity", "Timer button clicked")
+        // Honestly I don't even know if the executor here is necessary
+        // The idea behind this bit is to stop our thing from crashing when
+        // navigating to different fragments
+        // so far i got it to stop crashing by just cancelling the timer outright when switching to different fragments
+        // there's a better fix but i cannot be bothered right now
+        executor = Executors.newScheduledThreadPool(1)
 
-            Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show()
+        executor.schedule({
+            if (isAdded && !isDetached) {
+                requireActivity().runOnUiThread {
+                    // Update UI or navigate to another fragment
+                    Toast.makeText(context, "Timer has finished!", Toast.LENGTH_SHORT).show()
+                    resetTimer()
 
-            // Ideally this should open up a popup window similar to what you did before where
-            // it asks the user for hours/mins/sec for the initial timer then the break timer
+                }
+            }
+        }, 500, TimeUnit.MILLISECONDS)
+    }
+
+    private fun addExtraTime() {
+        val progressBar: ProgressBar = binding.progressBar
+        if (timeSelected != 0) {
+            timeSelected += 15
+            timerPause()
+            startTimer(pauseOffSet)
+            Toast.makeText(context, "Added 15 seconds", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun resetTimer() {
+        if (timeCountDown != null ) {
+            timeCountDown!!.cancel()
+            timeProgress = 0
+            timeSelected = 0
+            pauseOffSet = 0
+            timeCountDown = null
+            val startButton = binding.btnStartTimer
+            startButton.text = "Start"
+            isStart = true
+            val progressBar = binding.progressBar
+            progressBar.progress = 0
+            val tvTimeLeft = binding.tvTimeLeft
+            tvTimeLeft.text = "0"
+        }
+    }
+
+    private fun timerPause() {
+        if (timeCountDown != null) {
+            timeCountDown!!.cancel()
+
         }
 
     }
+
+    private fun startTimerSetup() {
+        val startBtn: Button = binding.btnStartTimer
+        if (timeSelected > timeProgress) {
+            if (isStart) {
+                startBtn.text = "Pause"
+                startTimer(pauseOffSet)
+                isStart = false
+            }
+            else {
+                isStart = true
+                startBtn.text = "Resume"
+                timerPause()
+            }
+        }
+        else {
+            Toast.makeText(context, "Set a timer", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun startTimer(pauseOffSetL: Long) {
+        val progressBar: ProgressBar = binding.progressBar
+        progressBar.progress = timeProgress
+        timeCountDown = object :CountDownTimer(
+            (timeSelected*1000).toLong() - pauseOffSetL*1000, 1000)
+        {
+            override fun onTick(p0: Long) {
+                timeProgress++
+                pauseOffSet = timeSelected.toLong()- p0/1000
+                progressBar.progress = timeSelected-timeProgress
+                val timeLeftTv: TextView = binding.tvTimeLeft
+                timeLeftTv.text = (timeSelected - timeProgress).toString()
+            }
+
+            override fun onFinish() {
+                resetTimer()
+                Toast.makeText(context ,"Times Up!", Toast.LENGTH_SHORT).show()
+            }
+
+        }.start()
+    }
+
+    private fun setTimeFunction()
+    {
+        val timeDialog = context?.let { Dialog(it) }
+        timeDialog?.setContentView(R.layout.add_timer_dialouge)
+        val timeSet = timeDialog?.findViewById<EditText>(R.id.etGetTime)
+        val timeLeftTv: TextView = binding.tvTimeLeft
+        val btnStart: Button = binding.btnStartTimer
+        val progressBar = binding.progressBar
+        timeDialog?.findViewById<Button>(R.id.btnOk)?.setOnClickListener {
+            if (timeSet?.text?.isEmpty() == true)
+            {
+                Toast.makeText(context,"Enter Time Duration",Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                resetTimer()
+                timeLeftTv.text = timeSet?.text
+                btnStart.text = "Start"
+                timeSelected = timeSet?.text.toString().toInt()
+                progressBar.max = timeSelected
+            }
+            timeDialog.dismiss()
+        }
+        timeDialog?.show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        executor.shutdownNow() // Cancel the timer task
+
+        if (timeCountDown != null ) {
+            timeCountDown?.cancel()
+            timeProgress = 0
+        }
+    }
+
 }

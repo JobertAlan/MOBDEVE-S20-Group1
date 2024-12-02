@@ -28,7 +28,6 @@ class TimerFragment : Fragment() {
     private var pauseOffSet: Long = 0
     private var isStart = true
 
-    private lateinit var executor : ScheduledExecutorService
 
     private lateinit var binding: FragmentTimerBinding
 
@@ -64,24 +63,6 @@ class TimerFragment : Fragment() {
         binding.btnAddFifteen.setOnClickListener {
             addExtraTime()
         }
-
-        // Honestly I don't even know if the executor here is necessary
-        // The idea behind this bit is to stop our thing from crashing when
-        // navigating to different fragments
-        // so far i got it to stop crashing by just cancelling the timer outright when switching to different fragments
-        // there's a better fix but i cannot be bothered right now
-        executor = Executors.newScheduledThreadPool(1)
-
-        executor.schedule({
-            if (isAdded && !isDetached) {
-                requireActivity().runOnUiThread {
-                    // Update UI or navigate to another fragment
-                    Toast.makeText(context, "Timer has finished!", Toast.LENGTH_SHORT).show()
-                    resetTimer()
-
-                }
-            }
-        }, 500, TimeUnit.MILLISECONDS)
     }
 
     private fun addExtraTime() {
@@ -189,7 +170,7 @@ class TimerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        executor.shutdownNow() // Cancel the timer task
+
 
         if (timeCountDown != null ) {
             timeCountDown?.cancel()

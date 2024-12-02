@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     //private lateinit var db: DbHelper
 
+    private var activeFragment: Fragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,11 +52,28 @@ class MainActivity : AppCompatActivity() {
 
 
     // Function to switch between fragments
-    private fun setCurrentFragment(fragment: Fragment) {
-        Log.d("MainActivity", "Switching to fragment: ${fragment.javaClass.simpleName}")
-        supportFragmentManager.beginTransaction().apply {
-            replace(binding.flFragment.id, fragment)
-            commit()
+    private fun setCurrentFragment(newFragment: Fragment) {
+        Log.d("MainActivity", "Switching to fragment: ${newFragment.javaClass.simpleName}")
+//        supportFragmentManager.beginTransaction().apply {
+//            replace(binding.flFragment.id, fragment)
+//            commit()
+//        }
+        val transaction = supportFragmentManager.beginTransaction()
+
+        if (activeFragment != null) {
+            transaction.hide(activeFragment!!) // Hide the currently active fragment
         }
+
+        // Check if the fragment has already been added
+        val existingFragment = supportFragmentManager.findFragmentByTag(newFragment.javaClass.simpleName)
+        if (existingFragment != null) {
+            transaction.show(existingFragment) // Show the existing fragment
+            activeFragment = existingFragment
+        } else {
+            transaction.add(binding.flFragment.id, newFragment, newFragment.javaClass.simpleName) // Add the new fragment
+            activeFragment = newFragment
+        }
+
+        transaction.commit()
     }
 }

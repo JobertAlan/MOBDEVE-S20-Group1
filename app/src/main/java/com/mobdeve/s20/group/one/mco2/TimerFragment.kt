@@ -61,12 +61,12 @@ class TimerFragment : Fragment() {
             resetTimer()
         }
         binding.btnAddFifteen.setOnClickListener {
-            addExtraTime()
+            //addExtraTime()
         }
     }
 
     private fun addExtraTime() {
-        val progressBar: ProgressBar = binding.progressBar
+
         if (timeSelected != 0) {
             timeSelected += 15
             timerPause()
@@ -82,13 +82,13 @@ class TimerFragment : Fragment() {
             timeSelected = 0
             pauseOffSet = 0
             timeCountDown = null
-            val startButton = binding.btnStartTimer
-            startButton.text = "Start"
+
+            binding.btnStartTimer.text = "Start"
             isStart = true
-            val progressBar = binding.progressBar
-            progressBar.progress = 0
-            val tvTimeLeft = binding.tvTimeLeft
-            tvTimeLeft.text = "0"
+
+            binding.progressBar.progress = 10
+
+            binding.tvTimeLeft.text = "0"
         }
     }
 
@@ -101,16 +101,16 @@ class TimerFragment : Fragment() {
     }
 
     private fun startTimerSetup() {
-        val startBtn: Button = binding.btnStartTimer
+
         if (timeSelected > timeProgress) {
             if (isStart) {
-                startBtn.text = "Pause"
+                binding.btnStartTimer.text = "Pause Timer"
                 startTimer(pauseOffSet)
                 isStart = false
             }
             else {
                 isStart = true
-                startBtn.text = "Resume"
+                binding.btnStartTimer.text = "Timer"
                 timerPause()
             }
         }
@@ -121,17 +121,17 @@ class TimerFragment : Fragment() {
     }
 
     private fun startTimer(pauseOffSetL: Long) {
-        val progressBar: ProgressBar = binding.progressBar
-        progressBar.progress = timeProgress
-        timeCountDown = object :CountDownTimer(
+
+        binding.progressBar.progress = timeProgress
+        timeCountDown = object : CountDownTimer(
             (timeSelected*1000).toLong() - pauseOffSetL*1000, 1000)
         {
             override fun onTick(p0: Long) {
                 timeProgress++
                 pauseOffSet = timeSelected.toLong()- p0/1000
-                progressBar.progress = timeSelected-timeProgress
-                val timeLeftTv: TextView = binding.tvTimeLeft
-                timeLeftTv.text = (timeSelected - timeProgress).toString()
+                binding.progressBar.progress = timeSelected-timeProgress
+
+                binding.tvTimeLeft.text = (timeSelected - timeProgress).toString()
             }
 
             override fun onFinish() {
@@ -147,9 +147,8 @@ class TimerFragment : Fragment() {
         val timeDialog = context?.let { Dialog(it) }
         timeDialog?.setContentView(R.layout.add_timer_dialouge)
         val timeSet = timeDialog?.findViewById<EditText>(R.id.etGetTime)
-        val timeLeftTv: TextView = binding.tvTimeLeft
-        val btnStart: Button = binding.btnStartTimer
-        val progressBar = binding.progressBar
+
+
         timeDialog?.findViewById<Button>(R.id.btnOk)?.setOnClickListener {
             if (timeSet?.text?.isEmpty() == true)
             {
@@ -158,10 +157,10 @@ class TimerFragment : Fragment() {
             else
             {
                 resetTimer()
-                timeLeftTv.text = timeSet?.text
-                btnStart.text = "Start"
+                binding.tvTimeLeft.text = timeSet?.text
+                binding.btnStartTimer.text = "Start"
                 timeSelected = timeSet?.text.toString().toInt()
-                progressBar.max = timeSelected
+                binding.progressBar.max = timeSelected
             }
             timeDialog.dismiss()
         }

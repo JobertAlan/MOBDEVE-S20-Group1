@@ -86,6 +86,7 @@ class OtherFragment : Fragment() {
         val journalWrittenToday = dbHelper.isJournalWrittenToday()
 
         // Reminder for daily tasks
+        //problem here
         tasks.forEach { task ->
             addNotification("Task Reminder", "Reminder to finish the task '${task.name}'!")
         }

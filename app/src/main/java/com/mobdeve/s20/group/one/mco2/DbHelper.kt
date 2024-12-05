@@ -4,6 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     // Stores constants to be used in queries
@@ -178,5 +182,83 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
         db.delete(TABLE_JOURNAL, whereClause, whereArgs)
         db.close()
     }
+
+//    Functions for Notifs
+    fun getJournalStatsSince(startDate: Date): Map<String, Int> {
+        val stats = mutableMapOf("positive" to 0, "negative" to 0, "neutral" to 0)
+        val db = readableDatabase
+        val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        val startDateString = sdf.format(startDate)
+
+        val query = "SELECT sentiment FROM Journal WHERE date >= ?"
+        val cursor = db.rawQuery(query, arrayOf(startDateString))
+
+        if (cursor.moveToFirst()) {
+            do {
+                when (cursor.getString(0)) {
+                    "positive" -> stats["positive"] = stats["positive"]!! + 1
+                    "negative" -> stats["negative"] = stats["negative"]!! + 1
+                    "neutral" -> stats["neutral"] = stats["neutral"]!! + 1
+                }
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return stats
+    }
+
+    fun getTaskCount(): Int {
+        val db = readableDatabase
+        val query = "SELECT COUNT(*) FROM Task"
+        val cursor = db.rawQuery(query, null)
+        var count = 0
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+
+        cursor.close()
+        db.close()
+        return count
+    }
+
+    fun getIncompleteTasks(): List<Task> {
+        val tasks = mutableListOf<Task>()
+        val db = readableDatabase
+        val query = "SELECT id, name FROM Task WHERE completed = 0"
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(0)
+                val name = cursor.getString(1)
+                tasks.add(Task(id, name))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return tasks
+    }
+
+    fun isJournalWrittenToday(): Boolean {
+        val db = readableDatabase
+        val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        val todayDate = sdf.format(Date())
+
+        val query = "SELECT COUNT(*) FROM Journal WHERE date = ?"
+        val cursor = db.rawQuery(query, arrayOf(todayDate))
+        var count = 0
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+
+        cursor.close()
+        db.close()
+        return count > 0
+    }
+
 
 }

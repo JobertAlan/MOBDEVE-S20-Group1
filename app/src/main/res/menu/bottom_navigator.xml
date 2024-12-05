@@ -19,7 +19,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/miOther"
-        android:icon="@drawable/ic_other"
-        android:title="Other"
+        android:icon="@drawable/ic_notification"
+        android:title="Notifs"
         app:showAsAction="always" />
 </menu>

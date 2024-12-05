@@ -1,20 +1,31 @@
 package com.mobdeve.s20.group.one.mco2
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 
 class NotificationAdapter(
-    private val notifications: MutableList<NotificationItem>
-) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
+    private val notifications: MutableList<NotificationItem>, context: Context):
+    RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
     class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvDate: TextView = view.findViewById(R.id.tvDate)
         val tvTime: TextView = view.findViewById(R.id.tvTime)
         val tvMessage: TextView = view.findViewById(R.id.tvMessage)
+        val btnDelete: ImageButton = view.findViewById(R.id.btnDelete)
+
+        fun bindData(notification: NotificationItem) {
+            tvDate.text = notification.date
+            tvTime.text = notification.time
+            tvMessage.text = notification.message
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
@@ -24,10 +35,18 @@ class NotificationAdapter(
     }
 
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
+        holder.bindData(notifications[position])
+
         val notification = notifications[position]
-        holder.tvDate.text = notification.date
-        holder.tvTime.text = notification.time
-        holder.tvMessage.text = notification.message
+
+        holder.btnDelete.setOnClickListener {
+            notifications.removeAt(position)
+            notifyItemRemoved(position)
+            Toast.makeText(holder.itemView.context, "Notification deleted", Toast.LENGTH_SHORT).show()
+        }
+
+
+
     }
 
     override fun getItemCount(): Int = notifications.size

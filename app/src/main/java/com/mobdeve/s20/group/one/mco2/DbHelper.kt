@@ -184,29 +184,38 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
     }
 
 //    Functions for Notifs
-    fun getJournalStatsSince(startDate: Date): Map<String, Int> {
-        val stats = mutableMapOf("positive" to 0, "negative" to 0, "neutral" to 0)
-        val db = readableDatabase
-        val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        val startDateString = sdf.format(startDate)
+fun getAllJournalCounts(): Map<String, Int> {
+    val counts = mutableMapOf("positive" to 0, "negative" to 0, "neutral" to 0)
+    val db = readableDatabase
 
-        val query = "SELECT sentiment FROM Journal WHERE date >= ?"
-        val cursor = db.rawQuery(query, arrayOf(startDateString))
+    // Query to count occurrences of each sentiment score
+    val query = """
+        SELECT $COLUMN_JOURNAL_SCORE, COUNT($COLUMN_JOURNAL_SCORE)
+        FROM $TABLE_JOURNAL
+        GROUP BY $COLUMN_JOURNAL_SCORE
+    """
+    val cursor = db.rawQuery(query, null)
 
-        if (cursor.moveToFirst()) {
-            do {
-                when (cursor.getString(0)) {
-                    "positive" -> stats["positive"] = stats["positive"]!! + 1
-                    "negative" -> stats["negative"] = stats["negative"]!! + 1
-                    "neutral" -> stats["neutral"] = stats["neutral"]!! + 1
-                }
-            } while (cursor.moveToNext())
-        }
+    if (cursor.moveToFirst()) {
+        do {
+            val score = cursor.getDouble(0)
+            val count = cursor.getInt(1)
 
-        cursor.close()
-        db.close()
-        return stats
+            when (score) {
+                1.0 -> counts["positive"] = count
+                0.0 -> counts["neutral"] = count
+                2.0 -> counts["negative"] = count
+            }
+        } while (cursor.moveToNext())
     }
+
+    cursor.close()
+    db.close()
+    return counts
+}
+
+
+
 
     fun getTaskCount(): Int {
         val db = readableDatabase
@@ -223,17 +232,21 @@ class DbHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
         return count
     }
 
-    fun getIncompleteTasks(): List<Task> {
+    fun getIncompleteTasks(): MutableList<Task> {
         val tasks = mutableListOf<Task>()
         val db = readableDatabase
-        val query = "SELECT id, name FROM Task WHERE completed = 0"
+//        val query = "SELECT id, name FROM Task WHERE completed = 0"
+        val query = "SELECT id, name FROM Task WHERE status != 'done'"
+
         val cursor = db.rawQuery(query, null)
 
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(0)
                 val name = cursor.getString(1)
-                tasks.add(Task(id, name))
+                val description = cursor.getString(2)
+                val status = cursor.getString(3)
+                tasks.add(Task(id, name, description, status))
             } while (cursor.moveToNext())
         }
 

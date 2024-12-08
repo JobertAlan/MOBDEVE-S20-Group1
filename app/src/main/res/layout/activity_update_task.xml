@@ -50,19 +50,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etUpdateTaskTitle" />
 
-    <EditText
-        android:id="@+id/etUpdateTaskProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="what is the current progress?"
-        android:inputType="text"
-        android:text="Current Progress..."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUpdateTaskDescription" />
+<!--    <EditText-->
+<!--        android:id="@+id/etUpdateTaskProgress"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="what is the current progress?"-->
+<!--        android:inputType="text"-->
+<!--        android:text="Current Progress..."-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.079"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etUpdateTaskDescription" />-->
 
     <Button
         android:id="@+id/btnUpdateTask"
@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="120dp"
+        android:layout_marginBottom="28dp"
         android:backgroundTint="#F20000"
         android:text="Delete Task"
         android:textColorLink="#E01111"
@@ -93,4 +94,13 @@
         app:layout_constraintTop_toBottomOf="@+id/etUpdateTaskProgress"
         app:layout_constraintVertical_bias="0.096" />
 
+    <Spinner
+        android:id="@+id/spinnerProgress"
+        android:layout_width="159dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="72dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etUpdateTaskDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

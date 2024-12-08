@@ -50,19 +50,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etTaskTitle" />
 
-    <EditText
-        android:id="@+id/etTaskProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="what is the current progress?"
-        android:inputType="text"
-        android:text="Current Progress..."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etTaskDescription" />
+<!--    <EditText-->
+<!--        android:id="@+id/etTaskProgress"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="what is the current progress?"-->
+<!--        android:inputType="text"-->
+<!--        android:text="Current Progress..."-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.079"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etTaskDescription" />-->
 
     <Button
         android:id="@+id/btnInsertTask"
@@ -76,4 +76,13 @@
         app:layout_constraintTop_toBottomOf="@+id/etTaskDescription"
         app:layout_constraintVertical_bias="0.0" />
 
+    <Spinner
+        android:id="@+id/spinnerProgress"
+        android:layout_width="159dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etTaskDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

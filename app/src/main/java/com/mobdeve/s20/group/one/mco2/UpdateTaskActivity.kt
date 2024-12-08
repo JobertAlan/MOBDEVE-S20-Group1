@@ -31,12 +31,24 @@ class UpdateTaskActivity : AppCompatActivity() {
         val task = db.getTaskById(taskId)
         binding.etUpdateTaskTitle.setText(task.title)
         binding.etUpdateTaskDescription.setText(task.description)
-        binding.etUpdateTaskProgress.setText(task.status)
+        //binding.etUpdateTaskProgress.setText(task.status)
+
+        //Spinner Setup
+        val spinnerSetup = SpinnerSetup(this, binding.spinnerProgress)
+        spinnerSetup.initializeSpinner()
+
+        val status = task.status
+        val position = (0 until binding.spinnerProgress.adapter.count).find {
+            binding.spinnerProgress.adapter.getItem(it).toString() == status
+        } ?: 0
+
+        binding.spinnerProgress.setSelection(position)
 
         binding.btnUpdateTask.setOnClickListener {
             val newTitle = binding.etUpdateTaskTitle.text.toString()
             val newDescription = binding.etUpdateTaskDescription.text.toString()
-            val newStatus = binding.etUpdateTaskProgress.text.toString()
+            //val newStatus = binding.etUpdateTaskProgress.text.toString()
+            val newStatus = binding.spinnerProgress.selectedItem.toString()
 
             db.updateTask(Task(taskId, newTitle, newDescription, newStatus))
             finish()

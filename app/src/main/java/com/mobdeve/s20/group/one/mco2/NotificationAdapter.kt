@@ -40,9 +40,14 @@ class NotificationAdapter(
         val notification = notifications[position]
 
         holder.btnDelete.setOnClickListener {
-            notifications.removeAt(position)
-            notifyItemRemoved(position)
-            Toast.makeText(holder.itemView.context, "Notification deleted", Toast.LENGTH_SHORT).show()
+            val removedPosition = holder.adapterPosition // Get the adapter position at runtime
+            if (removedPosition != RecyclerView.NO_POSITION) {
+                notifications.removeAt(removedPosition)
+                notifyItemRemoved(removedPosition)
+                notifyItemRangeChanged(removedPosition, notifications.size) // Update positions of subsequent items
+                Toast.makeText(holder.itemView.context, "Notification deleted", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 

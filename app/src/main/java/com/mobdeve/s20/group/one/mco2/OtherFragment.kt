@@ -13,7 +13,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-import com.mobdeve.s20.group.one.mco2.DataNotificationGenerator
+//import com.mobdeve.s20.group.one.mco2.DataNotificationGenerator
 
 class OtherFragment : Fragment() {
 
@@ -34,10 +34,10 @@ class OtherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sampleNotifList = DataNotificationGenerator.generateNotificationData()
+        //val sampleNotifList = DataNotificationGenerator.generateNotificationData()
 
         // insert list of notifications
-        notificationAdapter = NotificationAdapter(sampleNotifList, requireContext())
+        notificationAdapter = NotificationAdapter(mutableListOf(), requireContext())
         binding.rvNotifications.adapter = notificationAdapter
         binding.rvNotifications.layoutManager = LinearLayoutManager(context)
 
